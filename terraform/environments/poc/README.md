@@ -29,7 +29,6 @@ Export credentials before running Terraform:
 ```bash
 export AWS_ACCESS_KEY_ID=...
 export AWS_SECRET_ACCESS_KEY=...
-export AWS_SESSION_TOKEN=... # only for temporary credentials
 export AWS_REGION=us-east-1
 ```
 
@@ -41,7 +40,7 @@ aws sts get-caller-identity
 
 ## Remote state (S3 + DynamoDB lock)
 
-Bootstrap backend infrastructure for this environment:
+Bootstrap state of the infrastructure in S3 for this environment:
 
 ```bash
 cd bootstrap
@@ -61,7 +60,6 @@ Terraform state will be stored remotely in S3.
 ## Deploy
 
 ```bash
-cp terraform.tfvars
 terraform init
 terraform plan
 terraform apply

@@ -1,6 +1,6 @@
 # Terraform Structure
 
-This directory now follows a module + environment layout:
+This directory follows a module + environment layout:
 
 - `modules/network`: VPC and subnet provisioning
 - `modules/eks`: EKS cluster and bootstrap managed node group
