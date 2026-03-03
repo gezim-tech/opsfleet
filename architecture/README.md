@@ -198,38 +198,40 @@ See [diagrams/high-level-architecture.mmd](./diagrams/high-level-architecture.mm
 
 ```mermaid
 flowchart TB
-  Internet((Users)) --> WAF[AWS WAF]
+  U[Users] --> WAF[AWS WAF]
   WAF --> ALB[Application Load Balancer]
 
-  subgraph AWS_Org[AWS Organization]
-    subgraph Shared[Shared Services Account]
-      CI[CI/CD Pipeline] --> ECR[Amazon ECR]
-      Logs[Central Logs/Monitoring]
-    end
-
-    subgraph Prod_Account[Prod Account]
+  subgraph ORG[AWS Organization]
+    subgraph PROD[Prod Account]
       subgraph VPC[VPC - 3 AZ]
-        ALB --> Ingress[EKS Ingress Controller]
-        Ingress --> FE[React SPA Pods]
-        Ingress --> API[Flask API Pods]
-        API --> DB[(Aurora PostgreSQL)]
+        ALB --> ING[EKS Ingress Controller]
 
         subgraph EKS[EKS Cluster]
-          SystemNG[System Node Group - On Demand]
-          AppPool[App Node Pool - Spot/OnDemand]
-          Karpenter[Karpenter]
+          SYS[System Node Group - On-Demand]
+          APPN[App Node Pool - Spot and On-Demand]
+          KARP[Karpenter]
+          FE[React SPA Pods]
+          API[Flask API Pods]
         end
 
-        FE --- AppPool
-        API --- AppPool
-        Ingress --- SystemNG
-        Karpenter --> AppPool
+        subgraph DATA[Data Layer]
+          DB[(Aurora PostgreSQL)]
+        end
+
+        ING --> FE
+        ING --> API
+        API --> DB
+        KARP --> APPN
       end
     end
 
-    Shared --- Prod_Account
-    ECR --> Ingress
-    AppPool --> Logs
+    subgraph SHARED[Shared Services Account]
+      CI[CI/CD Pipeline] --> ECR[Amazon ECR]
+      LOGS[Central Logs and Monitoring]
+    end
+
+    ECR --> ING
+    API --> LOGS
   end
 ```
 
@@ -242,4 +244,5 @@ If requested, this architecture can be converted to Terraform modules in this or
 3. EKS baseline + platform add-ons
 4. database baseline
 5. CI/CD + GitOps bootstrap
+
 
