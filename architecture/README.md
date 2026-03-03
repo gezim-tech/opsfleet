@@ -202,36 +202,39 @@ flowchart TB
   WAF --> ALB[Application Load Balancer]
 
   subgraph ORG[AWS Organization]
+    subgraph SHARED[Shared Services Account]
+      CI[CI/CD Pipeline] --> ECR[Amazon ECR]
+      LOGS[Central Logs and Monitoring]
+    end
+
     subgraph PROD[Prod Account]
       subgraph VPC[VPC - 3 AZ]
         ALB --> ING[EKS Ingress Controller]
 
         subgraph EKS[EKS Cluster]
-          SYS[System Node Group - On-Demand]
-          APPN[App Node Pool - Spot and On-Demand]
-          KARP[Karpenter]
-          FE[React SPA Pods]
           API[Flask API Pods]
+          FE[React SPA Pods]
+          KARP[Karpenter]
+          APPN[App Node Pool - Spot and On-Demand]
+          SYS[System Node Group - On-Demand]
         end
 
         subgraph DATA[Data Layer]
           DB[(Aurora PostgreSQL)]
         end
 
-        ING --> FE
+        CWL[CloudWatch Logs]
+
         ING --> API
+        ING --> FE
         API --> DB
+        API --> CWL
         KARP --> APPN
       end
     end
 
-    subgraph SHARED[Shared Services Account]
-      CI[CI/CD Pipeline] --> ECR[Amazon ECR]
-      LOGS[Central Logs and Monitoring]
-    end
-
     ECR --> ING
-    API --> LOGS
+    CWL --> LOGS
   end
 ```
 
@@ -244,5 +247,6 @@ If requested, this architecture can be converted to Terraform modules in this or
 3. EKS baseline + platform add-ons
 4. database baseline
 5. CI/CD + GitOps bootstrap
+
 
 
