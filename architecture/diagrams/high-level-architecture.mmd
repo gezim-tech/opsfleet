@@ -10,9 +10,8 @@
 
     subgraph PROD[Prod Account]
       subgraph VPC[VPC - 3 AZ]
-        ALB --> ING[Traefik Ingress Controller]
-
         subgraph EKS[EKS Cluster]
+          ING[Traefik Ingress Controller]
           FE[React SPA Pods]
           API[Flask API Pods]
           KARP[Karpenter]
@@ -20,12 +19,13 @@
           SYS[System Node Group - On-Demand]
         end
 
-        subgraph DATA[Data  Layer]
+        subgraph DATA[Data Layer]
           DB[(Aurora PostgreSQL)]
         end
 
         CWL[CloudWatch Logs]
 
+        ALB --> ING
         ING --> FE
         FE --> API
         API --> DB
@@ -38,5 +38,3 @@
     ECR --> SYS
     CWL --> LOGS
   end
-
-

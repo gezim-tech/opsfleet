@@ -209,9 +209,8 @@ flowchart TB
 
     subgraph PROD[Prod Account]
       subgraph VPC[VPC - 3 AZ]
-        ALB --> ING[Traefik Ingress Controller]
-
         subgraph EKS[EKS Cluster]
+          ING[Traefik Ingress Controller]
           FE[React SPA Pods]
           API[Flask API Pods]
           KARP[Karpenter]
@@ -225,6 +224,7 @@ flowchart TB
 
         CWL[CloudWatch Logs]
 
+        ALB --> ING
         ING --> FE
         FE --> API
         API --> DB
@@ -248,6 +248,8 @@ If requested, this architecture can be converted to Terraform modules in this or
 3. EKS baseline + platform add-ons
 4. database baseline
 5. CI/CD + GitOps bootstrap
+
+
 
 
 
