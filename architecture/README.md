@@ -202,6 +202,11 @@ flowchart TB
   WAF --> ALB[Application Load Balancer]
 
   subgraph AWS_Org[AWS Organization]
+    subgraph Shared[Shared Services Account]
+      CI[CI/CD Pipeline] --> ECR[Amazon ECR]
+      Logs[Central Logs/Monitoring]
+    end
+
     subgraph Prod_Account[Prod Account]
       subgraph VPC[VPC - 3 AZ]
         ALB --> Ingress[EKS Ingress Controller]
@@ -218,19 +223,13 @@ flowchart TB
         FE --- AppPool
         API --- AppPool
         Ingress --- SystemNG
-        Karpenter --- EKS
+        Karpenter --> AppPool
       end
     end
 
-    subgraph Shared[Shared Services Account]
-      CI[CI/CD Pipeline]
-      ECR[Amazon ECR]
-      Logs[Central Logs/Monitoring]
-    end
-
-    CI --> ECR
-    ECR --> EKS
-    EKS --> Logs
+    Shared --- Prod_Account
+    ECR --> Ingress
+    AppPool --> Logs
   end
 ```
 
@@ -243,3 +242,4 @@ If requested, this architecture can be converted to Terraform modules in this or
 3. EKS baseline + platform add-ons
 4. database baseline
 5. CI/CD + GitOps bootstrap
+
