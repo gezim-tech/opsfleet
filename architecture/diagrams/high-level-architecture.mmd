@@ -10,7 +10,7 @@
 
     subgraph PROD[Prod Account]
       subgraph VPC[VPC - 3 AZ]
-        ALB --> ING[EKS Ingress Controller]
+        ALB --> ING[Traefik Ingress Controller]
 
         subgraph EKS[EKS Cluster]
           FE[React SPA Pods]
@@ -38,4 +38,5 @@
     ECR --> SYS
     CWL --> LOGS
   end
+
 

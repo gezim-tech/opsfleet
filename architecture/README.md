@@ -52,7 +52,7 @@ Use AWS Organizations with at least 4 accounts:
 ## Network security controls
 
 - EKS nodes in private subnets only.
-- Public ingress via AWS WAF -> ALB -> Ingress Controller.
+- Public ingress via AWS WAF -> ALB -> Traefik Ingress Controller.
 - Security groups:
   - ALB SG allows 443 from internet.
   - Node SG allows only required app and cluster traffic.
@@ -209,7 +209,7 @@ flowchart TB
 
     subgraph PROD[Prod Account]
       subgraph VPC[VPC - 3 AZ]
-        ALB --> ING[EKS Ingress Controller]
+        ALB --> ING[Traefik Ingress Controller]
 
         subgraph EKS[EKS Cluster]
           FE[React SPA Pods]
@@ -248,6 +248,7 @@ If requested, this architecture can be converted to Terraform modules in this or
 3. EKS baseline + platform add-ons
 4. database baseline
 5. CI/CD + GitOps bootstrap
+
 
 
 
