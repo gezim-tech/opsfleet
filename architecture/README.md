@@ -233,7 +233,8 @@ flowchart TB
       end
     end
 
-    ECR --> ING
+    ECR --> APPN
+    ECR --> SYS
     CWL --> LOGS
   end
 ```
@@ -247,6 +248,7 @@ If requested, this architecture can be converted to Terraform modules in this or
 3. EKS baseline + platform add-ons
 4. database baseline
 5. CI/CD + GitOps bootstrap
+
 
 
 
