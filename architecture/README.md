@@ -212,8 +212,8 @@ flowchart TB
         ALB --> ING[EKS Ingress Controller]
 
         subgraph EKS[EKS Cluster]
-          API[Flask API Pods]
           FE[React SPA Pods]
+          API[Flask API Pods]
           KARP[Karpenter]
           APPN[App Node Pool - Spot and On-Demand]
           SYS[System Node Group - On-Demand]
@@ -225,8 +225,8 @@ flowchart TB
 
         CWL[CloudWatch Logs]
 
-        ING --> API
         ING --> FE
+        FE --> API
         API --> DB
         API --> CWL
         KARP --> APPN
