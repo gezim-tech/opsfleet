@@ -1,0 +1,35 @@
+﻿flowchart TB
+  Internet((Users)) --> WAF[AWS WAF]
+  WAF --> ALB[Application Load Balancer]
+
+  subgraph AWS_Org[AWS Organization]
+    subgraph Prod_Account[Prod Account]
+      subgraph VPC[VPC - 3 AZ]
+        ALB --> Ingress[EKS Ingress Controller]
+        Ingress --> FE[React SPA Pods]
+        Ingress --> API[Flask API Pods]
+        API --> DB[(Aurora PostgreSQL)]
+
+        subgraph EKS[EKS Cluster]
+          SystemNG[System Node Group - On Demand]
+          AppPool[App Node Pool - Spot/OnDemand]
+          Karpenter[Karpenter]
+        end
+
+        FE --- AppPool
+        API --- AppPool
+        Ingress --- SystemNG
+        Karpenter --- EKS
+      end
+    end
+
+    subgraph Shared[Shared Services Account]
+      CI[CI/CD Pipeline]
+      ECR[Amazon ECR]
+      Logs[Central Logs/Monitoring]
+    end
+
+    CI --> ECR
+    ECR --> EKS
+    EKS --> Logs
+  end
