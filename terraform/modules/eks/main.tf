@@ -40,8 +40,8 @@ data "aws_iam_policy_document" "bootstrap_node_assume_role" {
 }
 
 resource "aws_iam_role" "bootstrap_node" {
-  name_prefix          = "bootstrap-eks-node-group-"
-  assume_role_policy   = data.aws_iam_policy_document.bootstrap_node_assume_role.json
+  name_prefix           = "bootstrap-eks-node-group-"
+  assume_role_policy    = data.aws_iam_policy_document.bootstrap_node_assume_role.json
   force_detach_policies = true
 
   tags = var.tags
@@ -70,7 +70,7 @@ resource "aws_eks_node_group" "bootstrap" {
 
   ami_type       = "AL2023_x86_64_STANDARD"
   instance_types = [var.bootstrap_instance_type]
-  capacity_type = "SPOT"
+  capacity_type  = "SPOT"
   labels = {
     "node-role" = "bootstrap"
   }

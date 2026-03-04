@@ -27,7 +27,7 @@ resource "helm_release" "karpenter" {
   repository_username = data.aws_ecrpublic_authorization_token.token.user_name
   repository_password = data.aws_ecrpublic_authorization_token.token.password
 
-  wait = true
+  wait    = true
   timeout = 900
 
   values = [
@@ -70,7 +70,7 @@ resource "kubectl_manifest" "ec2_node_class" {
           alias = "al2023@latest"
         }
       ]
-      role      = module.karpenter.node_iam_role_name
+      role = module.karpenter.node_iam_role_name
       subnetSelectorTerms = [
         {
           tags = {

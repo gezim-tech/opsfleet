@@ -34,7 +34,7 @@ jobs:
           aws-region: ${{ env.AWS_REGION }}
 
       - name: Terraform format check
-        run: terraform fmt -check -recursive
+        run: terraform fmt -check -recursive ./terraform
 
       - name: Terraform init
         working-directory: ${{ env.TF_WORKING_DIR }}
